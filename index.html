@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DevTask Manager - Kanban Board</title>
+
+  <!-- Tailwind & DaisyUI -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdn.jsdelivr.net/npm/daisyui@4.4.2/dist/full.css" rel="stylesheet" />
+
+  <!-- Font e Animazioni -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #dbeafe, #fce7f3);
+      transition: background 0.4s ease, color 0.4s ease;
+    }
+    .dark body {
+      background: linear-gradient(135deg, #1e293b, #0f172a);
+      color: #f1f5f9;
+    }
+    .glass {
+      background: rgba(255, 255, 255, 0.25);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+    .dark .glass {
+      background: rgba(30, 41, 59, 0.5);
+      border-color: rgba(148, 163, 184, 0.2);
+    }
+    .card {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .card:hover {
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    }
+  </style>
+</head>
+
+<body class="transition-all duration-300">
+
+  <!-- HEADER -->
+  <header class="glass shadow-lg py-6 mb-8">
+    <div class="container mx-auto flex flex-col md:flex-row justify-between items-center px-6">
+      <div class="text-center md:text-left">
+        <h1 class="text-3xl font-bold text-indigo-600 dark:text-indigo-300">🚀 DevTask Manager</h1>
+        <p class="text-sm text-gray-600 dark:text-gray-300 mt-1">
+          Gestisci il tuo progetto con una Kanban Board interattiva.
+        </p>
+      </div>
+
+      <!-- Switch per la modalità scura -->
+      <label class="swap swap-rotate mt-4 md:mt-0">
+        <input type="checkbox" id="darkToggle" />
+        <svg class="swap-on fill-current w-10 h-10 text-yellow-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M5.64 17l-.71.71A8 8 0 0 1 4 12a8 8 0 0 1 1.64-5.71L6.35 7A6 6 0 0 0 6 12a6 6 0 0 0 6 6c1.38 0 2.64-.47 3.64-1.29l.71.71A8 8 0 0 1 5.64 17z"/></svg>
+        <svg class="swap-off fill-current w-10 h-10 text-indigo-600 dark:text-indigo-300" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2a1 1 0 0 1 1 1v2a1 1 0 1 1-2 0V3a1 1 0 0 1 1-1zm6.36 3.64a1 1 0 0 1 1.41 1.41l-1.42 1.42a1 1 0 0 1-1.41-1.41l1.42-1.42zM21 11h-2a1 1 0 1 1 0-2h2a1 1 0 0 1 0 2zm-9 9a1 1 0 0 1 1 1v2a1 1 0 1 1-2 0v-2a1 1 0 0 1 1-1zm-7.07-1.93a1 1 0 0 1 1.41 0l1.42 1.42a1 1 0 1 1-1.41 1.41L4.93 19.07a1 1 0 0 1 0-1.41zM3 13H1a1 1 0 1 1 0-2h2a1 1 0 0 1 0 2z"/></svg>
+      </label>
+    </div>
+  </header>
+
+  <!-- FORM -->
+  <main class="container mx-auto p-6">
+    <section class="glass p-6 rounded-3xl shadow-xl mb-10">
+      <h2 class="text-xl font-semibold mb-4 text-indigo-600 dark:text-indigo-300">➕ Aggiungi una nuova issue</h2>
+      <form id="issueForm" class="grid md:grid-cols-5 gap-4">
+        <input id="titolo" type="text" placeholder="Titolo" class="input input-bordered w-full" required />
+        <input id="descrizione" type="text" placeholder="Descrizione" class="input input-bordered w-full" required />
+        <select id="priorita" class="select select-bordered w-full">
+          <option value="low">Low</option>
+          <option value="medium">Medium</option>
+          <option value="high">High</option>
+          <option value="critical">Critical</option>
+        </select>
+        <input id="assegnatario" type="text" placeholder="Assegnatario" class="input input-bordered w-full" required />
+        <button type="submit" class="btn btn-primary w-full md:col-span-1">Aggiungi</button>
+      </form>
+    </section>
+
+    <!-- BOARD -->
+    <section class="grid md:grid-cols-4 gap-6">
+      <div class="glass p-4 rounded-2xl shadow-lg">
+        <h3 class="font-semibold text-lg mb-3 text-blue-700 dark:text-blue-300">📋 Backlog</h3>
+        <div id="backlog" class="space-y-3"></div>
+      </div>
+
+      <div class="glass p-4 rounded-2xl shadow-lg">
+        <h3 class="font-semibold text-lg mb-3 text-yellow-700 dark:text-yellow-300">⚙️ In Progress</h3>
+        <div id="inprogress" class="space-y-3"></div>
+      </div>
+
+      <div class="glass p-4 rounded-2xl shadow-lg">
+        <h3 class="font-semibold text-lg mb-3 text-purple-700 dark:text-purple-300">🔍 Review</h3>
+        <div id="review" class="space-y-3"></div>
+      </div>
+
+      <div class="glass p-4 rounded-2xl shadow-lg">
+        <h3 class="font-semibold text-lg mb-3 text-green-700 dark:text-green-300">✅ Done</h3>
+        <div id="done" class="space-y-3"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="text-center mt-10 pb-6 text-gray-600 dark:text-gray-400 text-sm">
+    Creato con ❤️ per il progetto TPI — Kanban Board 2025
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
