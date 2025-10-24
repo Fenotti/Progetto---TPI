@@ -1,7 +1,6 @@
 
 //  DevTask Manager 
 
-
 const form = document.getElementById("issueForm");
 const backlog = document.getElementById("backlog");
 const inprogress = document.getElementById("inprogress");
