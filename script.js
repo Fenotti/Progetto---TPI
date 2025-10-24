@@ -1,6 +1,6 @@
-// ================================
-// 🌙 DevTask Manager - Versione Super (con Dark Mode e User Stories)
-// ================================
+
+//  DevTask Manager 
+
 
 const form = document.getElementById("issueForm");
 const backlog = document.getElementById("backlog");
